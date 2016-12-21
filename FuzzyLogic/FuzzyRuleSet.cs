@@ -1,160 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Tochas.FuzzyLogic.Defuzzers;
+using Tochas.FuzzyLogic.Evaluators;
+using Tochas.FuzzyLogic.Mergers;
 
 namespace Tochas.FuzzyLogic
 {
-
-    public interface IRuleEvaluator<T> where T : struct, IConvertible
+    public class FuzzyRuleSet<T> where T : struct, IConvertible
     {
-        FuzzyValue<T>[] EvaluateRules(List<FuzzyRule<T>> rules, FuzzyValueSet inputValueSet);
-    }
+        private List<FuzzyRule<T>> rules;
+        public FuzzySet<T> OutputVarSet { get; private set; }
 
-    public class RuleEvaluator<T> : IRuleEvaluator<T> where T : struct, IConvertible
-    {
-        private FuzzyValue<T>[] ruleOutputs;
+        public FuzzyValueSet OutputValueSet { get; private set; }
 
-        private void ClearOutputs()
-        {
-            if (this.ruleOutputs == null)
-                return;
-            for(int i=0; i< this.ruleOutputs.Length; i++)
-            {
-                this.ruleOutputs[i].membershipDegree = 0.0f;
-            }
-        }
+        public IRuleEvaluator<T> RuleEvaluator { get; set; }
+        public IFuzzyValuesMerger<T> OutputsMerger { get; set; }
+        public IDefuzzer<T> Defuzzer { get; set; }
 
-        public FuzzyValue<T>[] EvaluateRules(List<FuzzyRule<T>> rules, FuzzyValueSet inputValueSet)
-        {
-            int ruleCount = rules.Count;
-            if (this.ruleOutputs == null || (this.ruleOutputs != null && this.ruleOutputs.Length < ruleCount))
-                this.ruleOutputs = new FuzzyValue<T>[ruleCount];
-            else
-                this.ClearOutputs();
-            for (int i = 0; i < ruleCount; i++)
-            {
-                this.ruleOutputs[i] = rules[i].Evaluate(inputValueSet);
-            }
-            return this.ruleOutputs;
-        }
-    }
-
-    public interface IFuzzyValuesMerger<T> where T:struct, IConvertible
-    {
-        void MergeValues(FuzzyValue<T>[] values, FuzzyValueSet mergedOutputs);
-    }
-
-    public class CachedOutputsFuzzyValuesMerger<T> : IFuzzyValuesMerger<T> where T : struct, IConvertible
-    {
-        private T[] outputEnumValues;
-        
-        private Dictionary<T, List<FuzzyValue<T>>> duplicateOutputs;
-
-        public CachedOutputsFuzzyValuesMerger()
-        {
-            this.Initialize();
-        }
-
-        private void Initialize()
+        public FuzzyRuleSet(FuzzySet<T> varSet, List<FuzzyRule<T>> rules, IRuleEvaluator<T> ruleEvaluator, IFuzzyValuesMerger<T> outputsMerger, IDefuzzer<T> defuzzer)
         {
             if (!typeof(T).IsEnum)
             {
                 throw new ArgumentException("T must be an enumerated type");
             }
-            this.duplicateOutputs = new Dictionary<T, List<FuzzyValue<T>>>();
-            this.outputEnumValues = FuzzyUtils.GetEnumValues<T>();
-            for (int i = 0; i < this.outputEnumValues.Length; i++)
-            {
-                this.duplicateOutputs.Add(this.outputEnumValues[i], new List<FuzzyValue<T>>(10));
-            }
+            this.rules = rules;
+            this.OutputVarSet = varSet;
+            this.OutputValueSet = new FuzzyValueSet();
+            this.RuleEvaluator = ruleEvaluator;
+            this.OutputsMerger = outputsMerger;
+            this.Defuzzer = defuzzer;
         }
 
-        private void ClearOutputs()
+        public FuzzyRuleSet(FuzzySet<T> varSet, IEnumerable<FuzzyRule<T>> rules) :
+            this(varSet, new List<FuzzyRule<T>>(rules), new RuleEvaluator<T>(), new CachedOutputsFuzzyValuesMerger<T>(), new MaxAvDefuzzer<T>())
         {
-            List<FuzzyValue<T>> duplicateList = null;
-            for (int i = 0; i < this.outputEnumValues.Length; i++)
-            {
-                duplicateList = this.duplicateOutputs[this.outputEnumValues[i]];
-                duplicateList.Clear();
-            }
+
         }
 
-        private void CollapseOutputs(FuzzyValue<T>[] values)
+        public FuzzyRuleSet() : this(new FuzzySet<T>(), new List<FuzzyRule<T>>())
         {
-            List<FuzzyValue<T>> duplicateList = null;
-            for (int i = 0; i < values.Length; i++)
-            {
-                var outputValue = values[i];
-                if (outputValue.membershipDegree <= 0.0f)
-                {
-                    continue;
-                }
-                duplicateList = this.duplicateOutputs[outputValue.linguisticVariable];
-                duplicateList.Add(outputValue);
-            }
+
         }
 
-        public void MergeValues(FuzzyValue<T>[] values, FuzzyValueSet mergedOutputs)
+        public FuzzyRuleSet(FuzzySet<T> varSet) : this(varSet, new List<FuzzyRule<T>>())
         {
-            this.CollapseOutputs(values);
-            float maxValue = 0.0f;
-            FuzzyValue<T> value;
-            List<FuzzyValue<T>> duplicateList = null;
-            for (int i = 0; i < this.outputEnumValues.Length; i++)
-            {
-                maxValue = 0.0f;
-                duplicateList = this.duplicateOutputs[this.outputEnumValues[i]];
-                for (int j = 0; j < duplicateList.Count; j++)
-                {
-                    value = duplicateList[j];
-                    if (value.membershipDegree > maxValue) //Or-ing outputs
-                    {
-                        maxValue = value.membershipDegree;
-                    }
-                }
-                mergedOutputs.SetValue(new FuzzyValue<T>(this.outputEnumValues[i], maxValue));
-                duplicateList.Clear();
-            }
-        }
-    }
 
-    public interface IDefuzzer<T> where T : struct, IConvertible
-    {
-        float Defuzze(FuzzySet<T> outputVariableSet, FuzzyValueSet fuzzyValues);
-    }
-
-    public class MaxAvDefuzzer<T> : IDefuzzer<T> where T: struct, IConvertible
-    {
-        private T[] outputEnumValues;
-
-        public MaxAvDefuzzer()
-        {
-            if (!typeof(T).IsEnum)
-            {
-                throw new ArgumentException("T must be an enumerated type");
-            }
-            this.outputEnumValues = FuzzyUtils.GetEnumValues<T>();
         }
 
-        public float Defuzze(FuzzySet<T> outputVariableSet, FuzzyValueSet fuzzyValues)
+        public FuzzyRuleSet(IEnumerable<FuzzyRule<T>> rules) : this(new FuzzySet<T>(), new List<FuzzyRule<T>>(rules))
         {
-            float sumRepValConf = 0.0f;
-            float sumConf = 0.0f;
-            FuzzyVariable<T> fuzzyVar = null;
-            FuzzyValue<T> value;
-            for (int i = 0; i < this.outputEnumValues.Length; i++)
-            {
-                T linguisticVar = this.outputEnumValues[i];
-                value = fuzzyValues.GetValue(linguisticVar);
-                if (value.Confidence <= 0.0f)
-                    continue;
-                fuzzyVar = outputVariableSet.Get(linguisticVar);
-                sumRepValConf += (fuzzyVar.MembershipFunction.RepresentativeValue * value.Confidence);
-                sumConf += value.Confidence;
-            }
-            return sumRepValConf / sumConf;
+
+        }
+
+        public void Add(FuzzyRule<T> rule)
+        {
+            this.rules.Add(rule);
+        }
+
+        public void Add(IEnumerable<FuzzyRule<T>> rules)
+        {
+            this.rules.AddRange(rules);
+        }
+
+        public float Evaluate(FuzzyValueSet inputValueSet)
+        {
+            if (!this.OutputVarSet.IsValid())
+                return float.NaN;
+            int ruleCount = this.rules.Count;
+            var ruleOutputs = this.RuleEvaluator.EvaluateRules(this.rules, inputValueSet);
+            this.OutputsMerger.MergeValues(ruleOutputs, this.OutputValueSet);
+            var result = this.Defuzzer.Defuzze(this.OutputVarSet, this.OutputValueSet);
+            return result;
         }
     }
 }

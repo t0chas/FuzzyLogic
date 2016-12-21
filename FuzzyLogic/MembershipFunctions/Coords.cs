@@ -14,7 +14,7 @@ namespace Tochas.FuzzyLogic.MembershipFunctions
 
         public static float Lerp(Coords c1, Coords c2, float x)
         {
-            return Mathx.Lerp(c1.Y, c2.Y, c1.X, c2.X, x);
+            return MathFz.Lerp(c1.Y, c2.Y, c1.X, c2.X, x);
         }
     }
 }

@@ -3,6 +3,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tochas.FuzzyLogic;
 using Tochas.FuzzyLogic.MembershipFunctions;
 using System.Collections.Generic;
+using Tochas.FuzzyLogic.Evaluators;
+using Tochas.FuzzyLogic.Mergers;
+using Tochas.FuzzyLogic.Defuzzers;
+using Tochas.FuzzyLogic.Expressions;
 
 namespace UnitTest
 {

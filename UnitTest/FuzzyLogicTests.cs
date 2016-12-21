@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tochas.FuzzyLogic;
 using Tochas.FuzzyLogic.MembershipFunctions;
+using Tochas.FuzzyLogic.Expressions;
 
 namespace UnitTest
 {

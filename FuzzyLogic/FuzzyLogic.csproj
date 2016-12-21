@@ -40,13 +40,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Defuzzers\MaxAvDefuzzer.cs" />
+    <Compile Include="Evaluators\RuleEvaluator.cs" />
+    <Compile Include="Expressions\FuzzyAnd.cs" />
+    <Compile Include="Expressions\FuzzyExpressionExtensions.cs" />
+    <Compile Include="Expressions\FuzzyFairly.cs" />
+    <Compile Include="Expressions\FuzzyNot.cs" />
+    <Compile Include="Expressions\FuzzyOr.cs" />
+    <Compile Include="Expressions\FuzzyVariableExpression.cs" />
+    <Compile Include="Expressions\FuzzyVery.cs" />
     <Compile Include="FuzzyRule.cs" />
     <Compile Include="FuzzyRuleSet.cs" />
+    <Compile Include="FuzzySet.cs" />
+    <Compile Include="FuzzyUtils.cs" />
+    <Compile Include="FuzzyValue.cs" />
+    <Compile Include="FuzzyValueSet.cs" />
+    <Compile Include="FuzzyVariable.cs" />
+    <Compile Include="Interfaces.cs" />
+    <Compile Include="MathFz.cs" />
     <Compile Include="MembershipFunctions\Coords.cs" />
     <Compile Include="MembershipFunctions\ShoulderMembershipFunction.cs" />
     <Compile Include="MembershipFunctions\TriangularMemebershipFunction.cs" />
+    <Compile Include="Mergers\CachedOutputsFuzzyValuesMerger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

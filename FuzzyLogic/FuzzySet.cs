@@ -1,16 +1,22 @@
 ﻿using System;
+using Tochas.FuzzyLogic.Utils;
 
 namespace Tochas.FuzzyLogic
 {
     public class FuzzySet<T> where T : struct, IConvertible
     {
-        private T[] enumValues;
+        private EnumKey<T>[] enumValues;
         private FuzzyVariable<T>[] _variables;
 
         public FuzzySet()
         {
             FuzzyUtils.IsGenericParameterValid<T>();
-            this.enumValues = FuzzyUtils.GetEnumValues<T>();
+            var enumArr = FuzzyUtils.GetEnumValues<T>();
+            this.enumValues = new EnumKey<T>[enumArr.Length];
+            for(int i=0; i< this.enumValues.Length; i++)
+            {
+                this.enumValues[i] = EnumKey<T>.From(enumArr[i]);
+            }
             this._variables = new FuzzyVariable<T>[this.enumValues.Length];
         }
 
@@ -23,13 +29,13 @@ namespace Tochas.FuzzyLogic
         {
             if (fuzzyVariable == null)
                 return;
-            int idx = Array.IndexOf<T>(this.enumValues, fuzzyVariable.LinguisticVariable);
+            int idx = Array.IndexOf<EnumKey<T>>(this.enumValues, EnumKey<T>.From(fuzzyVariable.LinguisticVariable));
             this._variables[idx] = fuzzyVariable;
         }
 
         public FuzzyVariable<T> Get(T linguisticVar)
         {
-            int idx = Array.IndexOf<T>(this.enumValues, linguisticVar);
+            int idx = Array.IndexOf<EnumKey<T>>(this.enumValues, EnumKey<T>.From(linguisticVar));
             return this._variables[idx];
         }
 

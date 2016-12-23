@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tochas.FuzzyLogic.Utils;
 
 namespace Tochas.FuzzyLogic.Mergers
 {
@@ -7,7 +8,7 @@ namespace Tochas.FuzzyLogic.Mergers
     {
         private T[] outputEnumValues;
 
-        private Dictionary<T, List<FuzzyValue<T>>> duplicateOutputs;
+        private Dictionary<EnumKey, List<FuzzyValue<T>>> duplicateOutputs;
 
         public CachedOutputsFuzzyValuesMerger()
         {
@@ -17,11 +18,11 @@ namespace Tochas.FuzzyLogic.Mergers
         private void Initialize()
         {
             FuzzyUtils.IsGenericParameterValid<T>();
-            this.duplicateOutputs = new Dictionary<T, List<FuzzyValue<T>>>();
+            this.duplicateOutputs = new Dictionary<EnumKey, List<FuzzyValue<T>>>();
             this.outputEnumValues = FuzzyUtils.GetEnumValues<T>();
             for (int i = 0; i < this.outputEnumValues.Length; i++)
             {
-                this.duplicateOutputs.Add(this.outputEnumValues[i], new List<FuzzyValue<T>>(10));
+                this.duplicateOutputs.Add(EnumKey.From(this.outputEnumValues[i]), new List<FuzzyValue<T>>(10));
             }
         }
 
@@ -30,7 +31,7 @@ namespace Tochas.FuzzyLogic.Mergers
             List<FuzzyValue<T>> duplicateList = null;
             for (int i = 0; i < this.outputEnumValues.Length; i++)
             {
-                duplicateList = this.duplicateOutputs[this.outputEnumValues[i]];
+                duplicateList = this.duplicateOutputs[EnumKey.From(this.outputEnumValues[i])];
                 duplicateList.Clear();
             }
         }
@@ -45,7 +46,7 @@ namespace Tochas.FuzzyLogic.Mergers
                 {
                     continue;
                 }
-                duplicateList = this.duplicateOutputs[outputValue.linguisticVariable];
+                duplicateList = this.duplicateOutputs[EnumKey.From(outputValue.linguisticVariable)];
                 duplicateList.Add(outputValue);
             }
         }
@@ -59,7 +60,7 @@ namespace Tochas.FuzzyLogic.Mergers
             for (int i = 0; i < this.outputEnumValues.Length; i++)
             {
                 maxValue = 0.0f;
-                duplicateList = this.duplicateOutputs[this.outputEnumValues[i]];
+                duplicateList = this.duplicateOutputs[EnumKey.From(this.outputEnumValues[i])];
                 for (int j = 0; j < duplicateList.Count; j++)
                 {
                     value = duplicateList[j];

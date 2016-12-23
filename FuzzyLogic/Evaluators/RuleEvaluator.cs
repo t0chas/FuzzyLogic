@@ -7,6 +7,11 @@ namespace Tochas.FuzzyLogic.Evaluators
     {
         private FuzzyValue<T>[] ruleOutputs;
 
+        public RuleEvaluator()
+        {
+            FuzzyUtils.IsGenericParameterValid<T>();
+        }
+
         private void ClearOutputs()
         {
             if (this.ruleOutputs == null)

@@ -27,8 +27,8 @@ namespace UnitTest
         {
             FuzzyValueSet set = new FuzzyValueSet();
             FuzzyValue<Temperature> value = new FuzzyValue<Temperature>() { linguisticVariable = Temperature.Hot, membershipDegree = 0.5f };
-            set.SetValue(value);
-            var result = set.GetValue(Temperature.Hot);
+            set.Set(value);
+            var result = set.Get(Temperature.Hot);
             Assert.AreEqual(Temperature.Hot, result.linguisticVariable);
             Assert.AreEqual(0.5f, result.membershipDegree);
         }
@@ -39,9 +39,9 @@ namespace UnitTest
             FuzzyValueSet set = new FuzzyValueSet();
             FuzzyValue<Temperature> value01 = new FuzzyValue<Temperature>() { linguisticVariable = Temperature.Hot, membershipDegree = 0.5f };
             FuzzyValue<Temperature> value02 = new FuzzyValue<Temperature>() { linguisticVariable = Temperature.Warm, membershipDegree = 1f };
-            set.SetValue(value02);
-            set.SetValue(value01);
-            var result = set.GetValue(Temperature.Hot);
+            set.Set(value02);
+            set.Set(value01);
+            var result = set.Get(Temperature.Hot);
             Assert.AreEqual(Temperature.Hot, result.linguisticVariable);
             Assert.AreEqual(0.5f, result.membershipDegree);
         }
@@ -52,9 +52,9 @@ namespace UnitTest
             FuzzyValueSet set = new FuzzyValueSet();
             FuzzyValue<Temperature> value01 = new FuzzyValue<Temperature>() { linguisticVariable = Temperature.Hot, membershipDegree = 0.5f };
             FuzzyValue<Temperature> value02 = new FuzzyValue<Temperature>() { linguisticVariable = Temperature.Hot, membershipDegree = 1f };
-            set.SetValue(value02);
-            set.SetValue(value01);
-            var result = set.GetValue(Temperature.Hot);
+            set.Set(value02);
+            set.Set(value01);
+            var result = set.Get(Temperature.Hot);
             Assert.AreEqual(Temperature.Hot, result.linguisticVariable);
             Assert.AreEqual(0.5f, result.membershipDegree);
         }
@@ -65,9 +65,9 @@ namespace UnitTest
             FuzzyValueSet set = new FuzzyValueSet();
             FuzzyValue<Temperature> value01 = new FuzzyValue<Temperature>() { linguisticVariable = Temperature.Hot, membershipDegree = 0.5f };
             FuzzyValue<Command> value02 = new FuzzyValue<Command>() { linguisticVariable = Command.Heat, membershipDegree = 1f };
-            set.SetValue(value02);
-            set.SetValue(value01);
-            var result = set.GetValue(Temperature.Hot);
+            set.Set(value02);
+            set.Set(value01);
+            var result = set.Get(Temperature.Hot);
             Assert.AreEqual(Temperature.Hot, result.linguisticVariable);
             Assert.AreEqual(0.5f, result.membershipDegree);
         }
@@ -78,9 +78,9 @@ namespace UnitTest
             FuzzyValueSet set = new FuzzyValueSet();
             FuzzyValue<Temperature> value01 = new FuzzyValue<Temperature>() { linguisticVariable = Temperature.Hot, membershipDegree = 0.5f };
             FuzzyValue<Command> value02 = new FuzzyValue<Command>() { linguisticVariable = Command.Heat, membershipDegree = 1f };
-            set.SetValue(value02);
-            set.SetValue(value01);
-            var result = set.GetValue(Command.Heat);
+            set.Set(value02);
+            set.Set(value01);
+            var result = set.Get(Command.Heat);
             Assert.AreEqual(Command.Heat, result.linguisticVariable);
             Assert.AreEqual(1f, result.membershipDegree);
         }
@@ -130,8 +130,8 @@ namespace UnitTest
             FuzzyValue<Temperature> val01 = new FuzzyValue<Temperature>(Temperature.Cold, 0.8f);
             FuzzyValue<Temperature> val02 = new FuzzyValue<Temperature>(Temperature.Warm, 0.25f);
             FuzzyValueSet set = new FuzzyValueSet();
-            set.SetValue(val01);
-            set.SetValue(val02);
+            set.Set(val01);
+            set.Set(val02);
             FuzzyAnd exp = new FuzzyAnd(new FuzzyVariableExpression<Temperature>(Temperature.Cold), new FuzzyVariableExpression<Temperature>(Temperature.Warm));
             var result = exp.Evaluate(set);
             Assert.AreEqual(0.25f, result);
@@ -143,8 +143,8 @@ namespace UnitTest
             FuzzyValue<Temperature> val01 = new FuzzyValue<Temperature>(Temperature.Cold, 0.8f);
             FuzzyValue<Temperature> val02 = new FuzzyValue<Temperature>(Temperature.Warm, 0.25f);
             FuzzyValueSet set = new FuzzyValueSet();
-            set.SetValue(val01);
-            set.SetValue(val02);
+            set.Set(val01);
+            set.Set(val02);
             FuzzyOr exp = new FuzzyOr(new FuzzyVariableExpression<Temperature>(Temperature.Cold), new FuzzyVariableExpression<Temperature>(Temperature.Warm));
             var result = exp.Evaluate(set);
             Assert.AreEqual(0.8f, result);
@@ -156,8 +156,8 @@ namespace UnitTest
             FuzzyValue<Temperature> val01 = new FuzzyValue<Temperature>(Temperature.Cold, 0.8f);
             FuzzyValue<Temperature> val02 = new FuzzyValue<Temperature>(Temperature.Warm, 0.25f);
             FuzzyValueSet set = new FuzzyValueSet();
-            set.SetValue(val01);
-            set.SetValue(val02);
+            set.Set(val01);
+            set.Set(val02);
             FuzzyNot exp = new FuzzyNot(new FuzzyVariableExpression<Temperature>(Temperature.Cold));
             var result = exp.Evaluate(set);
             Assert.AreEqual(0.2f, result, 0.000005);
@@ -270,9 +270,9 @@ namespace UnitTest
 
             float inputTemp = 10;        
             FuzzyValueSet valueSet = new FuzzyValueSet();
-            valueSet.SetValue(cold.fX(inputTemp));
-            valueSet.SetValue(warm.fX(inputTemp));
-            valueSet.SetValue(hot.fX(inputTemp));
+            valueSet.Set(cold.fX(inputTemp));
+            valueSet.Set(warm.fX(inputTemp));
+            valueSet.Set(hot.fX(inputTemp));
             // 0.6666 AND 0.3333 OR NOT 0.0
 
             var result = rule.Evaluate(valueSet);

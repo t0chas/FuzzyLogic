@@ -19,10 +19,7 @@ namespace Tochas.FuzzyLogic
 
         public FuzzyRuleSet(FuzzySet<T> varSet, List<FuzzyRule<T>> rules, IRuleEvaluator<T> ruleEvaluator, IFuzzyValuesMerger<T> outputsMerger, IDefuzzer<T> defuzzer)
         {
-            if (!typeof(T).IsEnum)
-            {
-                throw new ArgumentException("T must be an enumerated type");
-            }
+            FuzzyUtils.IsGenericParameterValid<T>();
             this.rules = rules;
             this.OutputVarSet = varSet;
             this.OutputValueSet = new FuzzyValueSet();

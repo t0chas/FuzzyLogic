@@ -9,6 +9,7 @@ namespace Tochas.FuzzyLogic
 
         public FuzzySet()
         {
+            FuzzyUtils.IsGenericParameterValid<T>();
             this.enumValues = FuzzyUtils.GetEnumValues<T>();
             this._variables = new FuzzyVariable<T>[this.enumValues.Length];
         }
@@ -55,7 +56,7 @@ namespace Tochas.FuzzyLogic
                 if (this._variables[i] == null)
                     continue;
                 FuzzyValue<T> value = this._variables[i].fX(x);
-                outputs.SetValue(value);
+                outputs.Set(value);
             }
         }
     }

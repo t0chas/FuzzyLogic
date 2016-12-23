@@ -3,42 +3,24 @@ using System.Collections.Generic;
 
 namespace Tochas.FuzzyLogic
 {
-    public class FuzzyValueSet
+    public partial class FuzzyValueSet
     {
-        private Dictionary<IConvertible, object> values;
 
-        public FuzzyValueSet()
+        private Container container;
+
+        public FuzzyValueSet(int size = 100)
         {
-            this.values = new Dictionary<IConvertible, object>();
+            this.container = new Container(size);
         }
 
-        public void SetValue<T>(FuzzyValue<T> fuzzyValue) where T : struct, IConvertible
+        public void Set<T>(FuzzyValue<T> fuzzyValue) where T : struct, IConvertible
         {
-            if (!typeof(T).IsEnum)
-            {
-                throw new ArgumentException("T must be an enumerated type");
-            }
-            this.values[fuzzyValue.linguisticVariable] = fuzzyValue;
-            //this.values.Add(fuzzyValue.linguisticVariable, fuzzyValue);
+            this.container.Set(fuzzyValue);
         }
 
-        public FuzzyValue<T> GetValue<T>(T linguisticVariable) where T : struct, IConvertible
+        public FuzzyValue<T> Get<T>(T linguisticVariable) where T : struct, IConvertible
         {
-            if (!typeof(T).IsEnum)
-            {
-                throw new ArgumentException("T must be an enumerated type");
-            }
-            object varValue;
-            if (this.values.TryGetValue(linguisticVariable, out varValue))
-            {
-                FuzzyValue<T> ret = default(FuzzyValue<T>);
-                ret = (FuzzyValue<T>)varValue;
-                return ret;
-            }
-            else
-            {
-                return default(FuzzyValue<T>);
-            }
+            return this.container.Get(linguisticVariable);
         }
     }
 }

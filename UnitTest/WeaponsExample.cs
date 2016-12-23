@@ -148,9 +148,9 @@ namespace UnitTest
             IFuzzyValuesMerger<Desirability> merger = new CachedOutputsFuzzyValuesMerger<Desirability>();
             FuzzyValueSet mergedValues = new FuzzyValueSet();
             merger.MergeValues(ruleOutputs, mergedValues);
-            this.AssertFuzzyValue<Desirability>(Desirability.Undesirable, 0.33f, mergedValues.GetValue(Desirability.Undesirable));
-            this.AssertFuzzyValue<Desirability>(Desirability.Desirable, 0.2f, mergedValues.GetValue(Desirability.Desirable));
-            this.AssertFuzzyValue<Desirability>(Desirability.VeryDesirable, 0.67f, mergedValues.GetValue(Desirability.VeryDesirable));
+            this.AssertFuzzyValue<Desirability>(Desirability.Undesirable, 0.33f, mergedValues.Get(Desirability.Undesirable));
+            this.AssertFuzzyValue<Desirability>(Desirability.Desirable, 0.2f, mergedValues.Get(Desirability.Desirable));
+            this.AssertFuzzyValue<Desirability>(Desirability.VeryDesirable, 0.67f, mergedValues.Get(Desirability.VeryDesirable));
         }
 
         [TestMethod]
@@ -170,9 +170,9 @@ namespace UnitTest
         {
             var desirability = this.GetDesirabilitySet();
             FuzzyValueSet mergedValues = new FuzzyValueSet();
-            mergedValues.SetValue(new FuzzyValue<Desirability>(Desirability.Undesirable, 0.33f));
-            mergedValues.SetValue(new FuzzyValue<Desirability>(Desirability.Desirable, 0.2f));
-            mergedValues.SetValue(new FuzzyValue<Desirability>(Desirability.VeryDesirable, 0.67f));
+            mergedValues.Set(new FuzzyValue<Desirability>(Desirability.Undesirable, 0.33f));
+            mergedValues.Set(new FuzzyValue<Desirability>(Desirability.Desirable, 0.2f));
+            mergedValues.Set(new FuzzyValue<Desirability>(Desirability.VeryDesirable, 0.67f));
 
             IDefuzzer<Desirability> defuzzer = new MaxAvDefuzzer<Desirability>();
             var result = defuzzer.Defuzze(desirability, mergedValues);

@@ -9,6 +9,7 @@ namespace Tochas.FuzzyLogic
 
         public FuzzyRule(T outputVar, IFuzzyExpression exp)
         {
+            FuzzyUtils.IsGenericParameterValid<T>();
             this.OutputLinguisticVariable = outputVar;
             this.Expression = exp;
         }

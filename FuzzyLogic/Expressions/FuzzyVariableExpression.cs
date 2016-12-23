@@ -13,7 +13,7 @@ namespace Tochas.FuzzyLogic.Expressions
 
         public float Evaluate(FuzzyValueSet set)
         {
-            var fuzzyVar = set.GetValue(this.LinguisticVariable);
+            var fuzzyVar = set.Get(this.LinguisticVariable);
             return MathFz.Clamp01(fuzzyVar.membershipDegree);
         }
 

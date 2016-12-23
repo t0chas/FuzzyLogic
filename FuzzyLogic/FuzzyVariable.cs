@@ -10,6 +10,7 @@ namespace Tochas.FuzzyLogic
 
         public FuzzyVariable(T linguisticVariable, IMemebershipFunction membershipFunction)
         {
+            FuzzyUtils.IsGenericParameterValid<T>();
             this.LinguisticVariable = linguisticVariable;
             this.MembershipFunction = membershipFunction;
         }

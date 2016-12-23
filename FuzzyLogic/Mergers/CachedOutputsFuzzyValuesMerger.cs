@@ -16,10 +16,7 @@ namespace Tochas.FuzzyLogic.Mergers
 
         private void Initialize()
         {
-            if (!typeof(T).IsEnum)
-            {
-                throw new ArgumentException("T must be an enumerated type");
-            }
+            FuzzyUtils.IsGenericParameterValid<T>();
             this.duplicateOutputs = new Dictionary<T, List<FuzzyValue<T>>>();
             this.outputEnumValues = FuzzyUtils.GetEnumValues<T>();
             for (int i = 0; i < this.outputEnumValues.Length; i++)
@@ -71,7 +68,7 @@ namespace Tochas.FuzzyLogic.Mergers
                         maxValue = value.membershipDegree;
                     }
                 }
-                mergedOutputs.SetValue(new FuzzyValue<T>(this.outputEnumValues[i], maxValue));
+                mergedOutputs.Set(new FuzzyValue<T>(this.outputEnumValues[i], maxValue));
                 duplicateList.Clear();
             }
         }

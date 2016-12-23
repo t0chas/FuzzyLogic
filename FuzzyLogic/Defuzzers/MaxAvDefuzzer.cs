@@ -8,10 +8,7 @@ namespace Tochas.FuzzyLogic.Defuzzers
 
         public MaxAvDefuzzer()
         {
-            if (!typeof(T).IsEnum)
-            {
-                throw new ArgumentException("T must be an enumerated type");
-            }
+            FuzzyUtils.IsGenericParameterValid<T>();
             this.outputEnumValues = FuzzyUtils.GetEnumValues<T>();
         }
 
@@ -24,7 +21,7 @@ namespace Tochas.FuzzyLogic.Defuzzers
             for (int i = 0; i < this.outputEnumValues.Length; i++)
             {
                 T linguisticVar = this.outputEnumValues[i];
-                value = fuzzyValues.GetValue(linguisticVar);
+                value = fuzzyValues.Get(linguisticVar);
                 if (value.Confidence <= 0.0f)
                     continue;
                 fuzzyVar = outputVariableSet.Get(linguisticVar);

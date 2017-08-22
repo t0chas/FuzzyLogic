@@ -59,7 +59,7 @@ namespace Tochas.FuzzyLogic
             this.rules.AddRange(rules);
         }
 
-        public float Evaluate(FuzzyValueSet inputValueSet)
+        public float EvaluateFx(FuzzyValueSet inputValueSet)
         {
             if (!this.OutputVarSet.IsValid())
                 return float.NaN;
@@ -68,6 +68,14 @@ namespace Tochas.FuzzyLogic
             this.OutputsMerger.MergeValues(ruleOutputs, this.OutputValueSet);
             var result = this.Defuzzer.Defuzze(this.OutputVarSet, this.OutputValueSet);
             return result;
+        }
+
+        public T? EvaluateValue(FuzzyValueSet inputValueSet)
+        {
+            float value = this.EvaluateFx(inputValueSet);
+            if (float.IsNaN(value))
+                return null;
+            return this.OutputVarSet.Evaluate(value);
         }
     }
 }

@@ -17,12 +17,15 @@ namespace Tochas.FuzzyLogic.Utils
         internal int TypeHash { get { return this.typeHash; } }
         internal int ValueHash { get { return this.ValueHash; } }
 
+        private string strValue;
+
         public static EnumKey From<T>(T value) where T : struct, System.IConvertible
         {
             FuzzyUtils.IsGenericParameterValid<T>();
             EnumKey key = new EnumKey();
             key.typeHash = typeof(T).GetHashCode();
             key.valueHash = EnumInt32ToInt.Convert(value);
+            key.strValue = string.Format("{0}.{1}", typeof(T).Name, value.ToString());
             return key;
         }
 
@@ -52,6 +55,11 @@ namespace Tochas.FuzzyLogic.Utils
         public override int GetHashCode()
         {
             return this.typeHash * 17 + this.valueHash;
+        }
+
+        public override string ToString()
+        {
+            return this.strValue;
         }
     }
 

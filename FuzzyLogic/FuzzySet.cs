@@ -65,5 +65,25 @@ namespace Tochas.FuzzyLogic
                 outputs.Set(value);
             }
         }
+
+        public T Evaluate(float x)
+        {
+            FuzzyValueSet valueSet = new FuzzyValueSet();
+            this.Evaluate(x, valueSet);
+
+            T maxKey = default(T);
+            float maxDegree = float.MinValue;
+
+            foreach(EnumKey<T> key in this.enumValues)
+            {
+                FuzzyValue<T> var = valueSet.Get(key.Value);
+                if(var.Confidence > maxDegree)
+                {
+                    maxKey = var.linguisticVariable;
+                    maxDegree = var.Confidence;
+                }
+            }
+            return maxKey;
+        }
     }
 }

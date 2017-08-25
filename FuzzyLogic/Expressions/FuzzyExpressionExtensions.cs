@@ -26,6 +26,18 @@ namespace Tochas.FuzzyLogic.Expressions
             return or;
         }
 
+        public static IFuzzyExpression Fairly(this IFuzzyExpression exp)
+        {
+            FuzzyFairly fairly = new FuzzyFairly(exp);
+            return fairly;
+        }
+
+        public static IFuzzyExpression Very(this IFuzzyExpression exp)
+        {
+            FuzzyVery very = new FuzzyVery(exp);
+            return very;
+        }
+
         public static IFuzzyExpression Not(this IFuzzyExpression exp)
         {
             FuzzyNot not = new FuzzyNot(exp);

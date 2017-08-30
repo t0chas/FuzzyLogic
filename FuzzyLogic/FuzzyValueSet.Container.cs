@@ -37,6 +37,16 @@ namespace Tochas.FuzzyLogic
             {
                 this._internalDictionary.Clear();
             }
+
+            internal Container Clone()
+            {
+                Container other = new Container(this._internalDictionary.Count);
+                foreach(var kvc in this._internalDictionary)
+                {
+                    other._internalDictionary.Add(kvc.Key, kvc.Value);
+                }
+                return other;
+            }
         }
     }
 }

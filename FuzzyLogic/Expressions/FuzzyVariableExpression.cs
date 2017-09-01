@@ -19,7 +19,7 @@ namespace Tochas.FuzzyLogic.Expressions
 
         public override string ToString()
         {
-            return this.LinguisticVariable.ToString();
+            return string.Format("{0}.{1}" , typeof(T).Name,  this.LinguisticVariable.ToString());
         }
     }
 }

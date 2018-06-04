@@ -63,6 +63,7 @@
     <Compile Include="MathFz.cs" />
     <Compile Include="MembershipFunctions\Coords.cs" />
     <Compile Include="MembershipFunctions\ShoulderMembershipFunction.cs" />
+    <Compile Include="MembershipFunctions\TrapezoidalMemebershipFunction.cs" />
     <Compile Include="MembershipFunctions\TriangularMemebershipFunction.cs" />
     <Compile Include="Mergers\CachedOutputsFuzzyValuesMerger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -2,6 +2,19 @@
 
 namespace Tochas.FuzzyLogic.MembershipFunctions
 {
+    /// <summary>
+    /// Triangular membership function. 
+    /// 
+    ///                       P1
+    ///                       /\ 
+    ///                      /  \
+    ///                     /    \
+    ///                    /      \
+    ///                   /        \
+    ///                  /          \
+    /// ----------------             -------------------------
+    ///                P0            P2
+    /// </summary>
     public class TriangularMemebershipFunction : IMemebershipFunction
     {
 

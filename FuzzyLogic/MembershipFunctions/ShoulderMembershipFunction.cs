@@ -2,6 +2,28 @@
 
 namespace Tochas.FuzzyLogic.MembershipFunctions
 {
+    /// <summary>
+    /// Shoulder membership function. 
+    ///                   p1    
+    ///                   -----------------
+    ///                  /
+    ///                 /
+    ///                /
+    ///               /
+    /// --------------                                            
+    /// minX         p0                 maxX
+    /// 
+    /// 
+    ///              p0    
+    /// --------------                                       
+    ///               \
+    ///                \
+    ///                 \
+    ///                  \
+    ///                   -----------------
+    /// minX             p1                maxX
+    /// 
+    /// </summary>
     public class ShoulderMembershipFunction : IMemebershipFunction
     {
         private Coords[] points;
